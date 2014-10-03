@@ -17,11 +17,11 @@ public class GradPlanner
         Logger.getGlobal().setLevel(Level.INFO);
         Scanner in = new Scanner(System.in);
         boolean programRun = true;
-        ArrayList<Integer> compUnitTotal = new ArrayList<Integer>();
+        ArrayList<Integer> compUnitTotal = new ArrayList<Integer>(); // user-supplied values
+        int cusPerTerm = 0; // user-supplied value
         final int MONTHS_PER_TERM = 6;
         final int COST_PER_TERM = 2890;
         final int CUS_REQUIRED_PER_TERM = 12;
-        int totalCost = 0;
         while(programRun)
         {
             String input = "";
@@ -65,9 +65,9 @@ public class GradPlanner
                 boolean done = false;
                 while(!done)
                 {
-                    System.out.print("Enter the number of CUs you plan to complete per term: ");
                     if(compUnitTotal.size() > 0)
                     {
+                        System.out.print("Enter the number of CUs you plan to complete per term: ");
                         String unitInput = in.next();
                         try
                         {
@@ -83,7 +83,7 @@ public class GradPlanner
                             }
                             else
                             {
-                                System.out.println("OK");
+                                cusPerTerm = unitInt;
                                 done = true;
                             }
                         }
@@ -101,7 +101,24 @@ public class GradPlanner
             }
             else if(input.toLowerCase().equals("c")) // user selects to calculate
             {
-                
+                if(cusPerTerm != 0) // avoid divide by zero
+                {
+                    int sum = unitSum(compUnitTotal);
+                    int totalTerms = sum / cusPerTerm;
+                    if(sum % cusPerTerm > 0) // round terms up
+                    {
+                        totalTerms++;
+                    }
+                    int totalCost = COST_PER_TERM * totalTerms;
+                    int totalMonths = totalTerms * MONTHS_PER_TERM;
+                    System.out.printf("Number of terms to complete %d competency units at %d units per term: %d\n", sum, cusPerTerm, totalTerms);
+                    System.out.printf("Tuition cost for %d terms: $%,d\n", totalTerms, totalCost);
+                    System.out.printf("Number of months to complete %d competency units at %d units per term: %d\n", sum, cusPerTerm, totalMonths);
+                }
+                else
+                {
+                    System.out.println("Error: you must enter valid data before calculating!");
+                }
             }
             else if(input.toLowerCase().equals("q")) // user selects to quit program
             {
@@ -113,6 +130,11 @@ public class GradPlanner
             }
         }
     }
+    /**
+        Calculates the sum of integers in an ArrayList
+        @param arrayList the ArrayList object from which to pull elements
+        @return the sum of all elements of arrayList
+    */
     public static int unitSum(ArrayList<Integer> arrayList)
     {
         int result = 0;
