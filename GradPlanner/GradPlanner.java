@@ -31,23 +31,29 @@ public class GradPlanner
                 boolean done = false;
                 while(!done)
                 {
-                    int courseInput = 0;
+                    String courseInput = "";
                     System.out.print("Enter remaining course units individually (-1 to return to main options): ");
-                    if(in.hasNextInt())
+                    courseInput = in.next();
+                    String err = "Error: please enter integers greater than 0 (or -1 to return to main options).";
+                    try
                     {
-                        courseInput = in.nextInt();
+                        int courseInt = Integer.parseInt(courseInput);
+                        if(courseInt == -1) // return to main options
+                        {
+                            done = true;
+                        }
+                        else if(courseInt > 0) // add CUs to ArrayList
+                        {
+                            compUnitTotal.add(courseInt);
+                        }
+                        else
+                        {
+                            System.out.println(err);
+                        }
                     }
-                    if(courseInput == -1) // return to main options
+                    catch(NumberFormatException e)
                     {
-                        done = true;
-                    }
-                    else if(courseInput > 0) // add CUs to ArrayList
-                    {
-                        compUnitTotal.add(courseInput);
-                    }
-                    else // invalid input
-                    {
-                        System.out.println("Error: please enter integers greater than 0 (or -1 to return to main options).");
+                        System.out.println(err);
                     }
                 }
             }
